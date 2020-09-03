@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "server":"npx nodemon app.js"
+    "server": "npx nodemon app.js"
   },
   "name": "expressapp",
   "version": "1.0.0",

@@ -47,10 +47,9 @@ put: async (req, res) => {
 },
 
   delete: async (req, res) => {
-      console.log('req.body', req.query)
     try {
-      await res.product.remove();
-      res.json({ message: "this product is deleted" });
+      const deletedProduct =  await Product.findOneAndDelete({_id: req.params.id})
+      res.send({ deletedProduct});
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
