@@ -1,7 +1,9 @@
 const Product = require('../models/goodsSchema');
 
-const getAll = () => Product.find({});
+const getAllPoducts = () => Product.find({});
+const getProductById = (id) => Product.findById(id);
 
 module.exports = {
-    getAll
+    getAllPoducts,
+    getProductById
 }
