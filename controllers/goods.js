@@ -13,7 +13,7 @@ module.exports = {
 
   getById: async (req, res) => {
     const { id } = req.params;
-    if (req.params.id) {
+    if (id) {
       try {
         const product = await getProductById(id);
         return res.json(product);
