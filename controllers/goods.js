@@ -2,17 +2,20 @@ const { getAllProducts,getProductById,deleteProduct,addNewProduct,editProduct } 
 
 module.exports = {
   get: async (req, res,next) => {
-    try {
-      const product = await getAllProducts();
-      res.json(product);
-    } catch (err) {
-     next(err)
+    if (req.params){
+      try {
+        const product = await getAllProducts();
+        res.json(product);
+      } catch (err) {
+        next(err)
+      }
     }
+    next()
   },
 
   getById: async (req, res,next) => {
-    const { id } = req.params;
     if (req.params.id) {
+      const { id } = req.params;
       try {
         const product = await getProductById(id);
         res.json(product);
@@ -26,7 +29,7 @@ module.exports = {
     const {name, isAvailable, price} = req.body
     try {
       const newProduct = await addNewProduct(name,price,isAvailable)
-      res.status(201).json(newProduct);
+      res.status(200).json(newProduct);
     } catch (err) {
       next(err)
     }
