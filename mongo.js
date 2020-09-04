@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
-const db =  mongoose.connect(
-    "mongodb://localhost:27017/goods",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-);
-
-module.exports = {
-    db
+require('dotenv').config();
+const connectDb = () => {
+    const options = {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+    mongoose.connect(process.env.DB_HOST, options)
+    return mongoose.connection
 }
+
+module.exports = connectDb;
+
+

@@ -1,61 +1,55 @@
-const Product = require("../models/goodsSchema");
-const { getAllPoducts } = require("../services/products");
+const { getAllProducts,getProductById,deleteProduct,addNewProduct,editProduct } = require("../services/products");
 
 module.exports = {
-  get: async (req, res) => {
+  get: async (req, res,next) => {
     try {
-      const product = await getAllPoducts();
+      const product = await getAllProducts();
       res.json(product);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+     next(err)
     }
   },
 
-  getById: async (req, res) => {
+  getById: async (req, res,next) => {
     const { id } = req.params;
-    if (id) {
+    if (req.params.id) {
       try {
         const product = await getProductById(id);
-        return res.json(product);
+        res.json(product);
       } catch (err) {
-        res.status(400).json({ message: err.message });
+        next(err)
       }
     }
   },
 
-  post: async (req, res) => {
-    const product = new Product({
-      name: req.body.name,
-      isAvailable: req.body.isAvailable,
-      price: req.body.price,
-    });
+  post: async (req, res,next) => {
+    const {name, isAvailable, price} = req.body
     try {
-      const newProduct = await product.save();
+      const newProduct = await addNewProduct(name,price,isAvailable)
       res.status(201).json(newProduct);
-    } catch (err) {}
-  },
-
-  put: async (req, res) => {
-    try {
-      const editedProduct = await Product.findOneAndUpdate(
-        { _id: req.params.id },
-        req.body,
-        { new: true }
-      );
-      res.json({ editedProduct });
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      next(err)
     }
   },
 
-  delete: async (req, res) => {
+  put: async (req, res,next) => {
     try {
-      const deletedProduct = await Product.findOneAndDelete({
-        _id: req.params.id,
-      });
+      const editedProduct = await editProduct(
+        req.params.id ,
+        req.body,
+      );
+      res.json({ editedProduct });
+    } catch (err) {
+     next(err)
+    }
+  },
+
+  delete: async (req, res,next) => {
+    try {
+      const deletedProduct = await deleteProduct({_id:req.params.id});
       res.send({ deletedProduct });
     } catch (err) {
-      res.status(600).json({ message: err.message });
+      next(err)
     }
   },
 };
