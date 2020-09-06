@@ -8,7 +8,6 @@ const connectDb = () => {
     mongoose.connect(process.env.DB_HOST, options)
     return mongoose.connection
 }
-
 module.exports = connectDb;
 
 

@@ -1,26 +1,24 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const connectDb = require('./mongo')
 const goodsRouter = require('./routes/goods');
-require('dotenv').config()
-
+const serverPort = process.env.SERVER_PORT;
+const serverUrl = process.env.SERVER_URL;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
         credentials: true,
-        origin: ["http://localhost:8000"],
+        origin: [`http://${serverUrl}:${serverPort}`],
         optionsSuccessStatus: 200
-    })
-
-);
+    }));
 app.use(goodsRouter);
 const startServer = () => {
-    app.listen(process.env.SERVER_PORT)
-    console.log(`App started on port 8000 + mongod`)
-};
+    app.listen(serverPort)
+    console.log(`App started on port ${serverPort} + mongod`)};
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
@@ -31,6 +29,6 @@ app.use((err, req, res, next) => {
     });
 });
 connectDb()
-    .on('error', () => console.log('zalupa'))
-    .on('disconnected', connectDb)
-    .once('open', startServer);
+    .on('error', () => console.log('err'))
+    .on('disconnected',connectDb)
+    .once('open',startServer);
