@@ -11,14 +11,15 @@ const serverUrl = process.env.SERVER_URL;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
-        credentials: true,
-        origin: [`http://${serverUrl}:${serverPort}`],
-        optionsSuccessStatus: 200
-    }));
+    credentials: true,
+    origin: [`http://${serverUrl}:${serverPort}`],
+    optionsSuccessStatus: 200
+}));
 app.use(goodsRouter);
 const startServer = () => {
     app.listen(serverPort)
-    console.log(`App started on port ${serverPort} + mongod`)};
+    console.log(`App started on port ${serverPort} + mongod`)
+};
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
@@ -30,5 +31,5 @@ app.use((err, req, res, next) => {
 });
 connectDb()
     .on('error', () => console.log('err'))
-    .on('disconnected',connectDb)
-    .once('open',startServer);
+    .on('disconnected', connectDb)
+    .once('open', startServer);
