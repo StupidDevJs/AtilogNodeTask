@@ -1,22 +1,37 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-  
+require('dotenv').config();
+const express = require('express');
 const app = express();
-  
-// создаем парсер для данных application/x-www-form-urlencoded
-const urlencodedParser = bodyParser.urlencoded({extended: false});
- 
-app.get("/register", urlencodedParser, function (request, response) {
-    response.sendFile(__dirname + "/register.html");
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const connectDb = require('./mongo')
+const goodsRouter = require('./routes/goods');
+
+const serverPort = process.env.SERVER_PORT;
+const serverUrl = process.env.SERVER_URL;
+const frontPort = process.env.FRON_PORT;
+const dbHost = process.env.DB_HOST;
+const startServer = () => {
+    app.listen(serverPort)
+    console.log(`App started on port ${serverPort} + mongod`)
+};
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({
+    credentials: true,
+    origin: [`http://${serverUrl}:${frontPort}`],
+    optionsSuccessStatus: 200
+}));
+app.use(goodsRouter);
+app.use((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+
+    res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
+    });
 });
-app.post("/register", urlencodedParser, function (request, response) {
-    if(!request.body) return response.sendStatus(400);
-    console.log(request.body);
-    response.send(`${request.body.userName} - ${request.body.userAge}`);
-});
-  
-app.get("/", function(request, response){
-    response.send("Главная страница");
-});
-  
-app.listen(3000);
+connectDb()
+    .on('error', () => console.log('err'))
+    .on('disconnected', connectDb)
+    .once('open', startServer);
