@@ -1,4 +1,10 @@
-const { getAllProducts, getProductById, deleteProduct, addNewProduct, editProduct } = require("../services/products");
+const {
+  getAllProducts,
+  getProductById,
+  deleteProduct,
+  addNewProduct,
+  editProduct,
+} = require("../services/products");
 
 module.exports = {
   get: async (req, res, next) => {
@@ -7,10 +13,10 @@ module.exports = {
         const product = await getAllProducts();
         res.json(product);
       } catch (err) {
-        next(err)
+        next(err);
       }
     }
-    next()
+    next();
   },
   getById: async (req, res, next) => {
     if (req.params.id) {
@@ -19,37 +25,37 @@ module.exports = {
         const product = await getProductById(id);
         res.json(product);
       } catch (err) {
-        next(err)
+        next(err);
       }
     }
   },
   post: async (req, res, next) => {
-    const { name, isAvailable, price } = req.body
+    const { name, isAvailable, price } = req.body;
     try {
-      const newProduct = await addNewProduct(name, price, isAvailable)
+      const newProduct = await addNewProduct(name, price, isAvailable);
       res.status(200).json(newProduct);
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
   put: async (req, res, next) => {
     try {
       const { body } = req;
       const { id } = req.params;
-      console.log(body, id)
       const editedProduct = await editProduct(id, body);
       res.json({ editedProduct });
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
   delete: async (req, res, next) => {
     try {
-      const { id } = req.params.id
+      const { id } = req.params;
       const deletedProduct = await deleteProduct({ _id: id });
+      console.log('deletedProduct', deletedProduct)
       res.send({ deletedProduct });
     } catch (err) {
-      next(err)
+      next(err);
     }
   },
 };
