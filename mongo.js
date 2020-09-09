@@ -3,7 +3,8 @@ require('dotenv').config();
 const connectDb = () => {
     const options = {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false 
     }
     mongoose.connect(process.env.DB_HOST, options)
     return mongoose.connection

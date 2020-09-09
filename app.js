@@ -8,6 +8,7 @@ const goodsRouter = require('./routes/goods');
 
 const serverPort = process.env.SERVER_PORT;
 const serverUrl = process.env.SERVER_URL;
+const frontPort = process.env.FRON_PORT;
 const dbHost = process.env.DB_HOST;
 const startServer = () => {
     app.listen(serverPort)
@@ -17,7 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     credentials: true,
-    origin: [`http://${serverUrl}:3000`],
+    origin: [`http://${serverUrl}:${frontPort}`],
     optionsSuccessStatus: 200
 }));
 app.use(goodsRouter);
