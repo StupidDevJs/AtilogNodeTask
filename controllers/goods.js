@@ -30,12 +30,20 @@ module.exports = {
     }
   },
   post: async (req, res, next) => {
-    const { name, isAvailable, price } = req.body;
+    const { name, isAvailable, price, description} = req.body;
     try {
-      const newProduct = await addNewProduct(name, price, isAvailable);
+      const newProduct = await addNewProduct(name, price, isAvailable, description);
       res.status(200).json(newProduct);
     } catch (err) {
-      next(err);
+      if (/duplicate key error/.test(err.message)) {
+        next({
+          statusCode: 400,
+          message: 'duplicate error',
+          data: Object.keys(err.keyValue)
+        });
+      } else {
+        next(err);
+      }
     }
   },
   put: async (req, res, next) => {

@@ -4,11 +4,11 @@ const app = express();
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const connectDb = require('./mongo')
-const goodsRouter = require('./routes/goods');
+const router = require('./routes');
 
 const serverPort = process.env.SERVER_PORT;
 const serverUrl = process.env.SERVER_URL;
-const frontPort = process.env.FRON_PORT;
+const frontPort = process.env.FRONT_PORT;
 const dbHost = process.env.DB_HOST;
 const startServer = () => {
     app.listen(serverPort)
@@ -21,14 +21,15 @@ app.use(cors({
     origin: [`http://${serverUrl}:${frontPort}`],
     optionsSuccessStatus: 200
 }));
-app.use(goodsRouter);
+app.use(router);
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
     res.status(err.statusCode).json({
         status: err.status,
-        message: err.message
+        message: err.message,
+        data: err.data || null
     });
 });
 connectDb()

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const goodsController = require('../controllers/goods');
-router.get('/products', goodsController.get);
+const AuthMiddleware = require('../middleware/auth')
+router.get('/products', AuthMiddleware ,goodsController.get);
 router.get('/products/:id', goodsController.getById);
 router.post('/products', goodsController.post);
 router.put('/products/:id', goodsController.put);
