@@ -4,7 +4,6 @@ const User = require('../models/authSchema');
 const registerUser = async (email, password) => {
     const salt = await bCrypt.genSalt();
     const hashedPass = bCrypt.hashSync(password, salt)
-    console.log(hashedPass);
     return new User({
         email,
         password: hashedPass,

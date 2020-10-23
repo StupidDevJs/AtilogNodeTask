@@ -7,8 +7,7 @@ module.exports = {
         const { email, password } = req.body;
         try {
             const newUser = await registerUser(email, password);
-            const token = jwt.sign(newUser._id.toString(), key);
-            res.status(200).json({ token });
+            res.status(200);
         } catch (err) {
             if (/duplicate key error/.test(err.message)) {
                 next({
@@ -31,12 +30,12 @@ module.exports = {
             } else {
                 res.status(401).json({ message: 'invalid Credentials' });
             }
-            
+
         } catch (err) {
-                next({
-                    statusCode: 401,
-                    message: 'invalid Credentails',
-                });
+            next({
+                statusCode: 401,
+                message: 'invalid Credentails',
+            });
         }
     },
 
