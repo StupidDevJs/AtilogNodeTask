@@ -3,13 +3,12 @@ const secretWord = process.env.SECRET_WORD
 
 
 module.exports = (req,res,next)=>{
-        // console.log();
-        const authHeader = req.get('Autorization');
+        const authHeader = req.headers.authorizations
         if(!authHeader) {
             res.status(401).json({message: 'Token not provided'})
         }
-        const token = authHeader.replace('Bearer ', '');
         try{
+            const token = authHeader.replace('Bearer ', '');
             jwt.verify(token,secretWord)
         } catch (err) {
             if(err instanceof jwt.JsonWebTokenError){

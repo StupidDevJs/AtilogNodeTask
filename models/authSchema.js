@@ -4,4 +4,4 @@ const authSchema = new mongoose.Schema({
     password: { type: String, required: true },
 
 });
-module.exports = mongoose.model('RegisteredUsers', authSchema);
+module.exports = mongoose.model('User', authSchema);

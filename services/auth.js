@@ -12,8 +12,8 @@ const registerUser = async (email, password) => {
 const authUser = async (email, password) => {
     try {
         const user = await User.findOne({ email });
-        const isValid = bCrypt.compareSync(password, user.password);
-        if (user && isValid) {
+        await bCrypt.compareSync(password, user.password);
+        if (user) {
             return user
         } else {
             return new Error('invalid credentials')

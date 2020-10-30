@@ -4,10 +4,10 @@ const key = process.env.SECRET_WORD;
 
 module.exports = {
     register: async (req, res, next) => {
-        const { email, password } = req.body;
         try {
+            const { email, password } = req.body;
             const newUser = await registerUser(email, password);
-            res.status(200);
+            res.status(200).json({ message: 'Done' });
         } catch (err) {
             if (/duplicate key error/.test(err.message)) {
                 next({
@@ -21,8 +21,8 @@ module.exports = {
         }
     },
     auth: async (req, res, next) => {
-        const { email, password } = req.body;
         try {
+            const { email, password } = req.body;
             const newUser = await authUser(email, password);
             if (newUser) {
                 const token = jwt.sign(newUser._id.toString(), key);

@@ -7,31 +7,27 @@ const {
 } = require("../services/products");
 
 module.exports = {
-  get: async (req, res, next) => {
-    if (req.params) {
-      try {
-        const product = await getAllProducts();
-        res.json(product);
-      } catch (err) {
-        next(err);
-      }
+  getProduct: async (req, res, next) => {
+    try {
+      const product = await getAllProducts();
+      res.json(product);
+    } catch (err) {
+      next(err);
     }
     next();
   },
   getById: async (req, res, next) => {
-    if (req.params.id) {
+    try {
       const { id } = req.params;
-      try {
-        const product = await getProductById(id);
-        res.json(product);
-      } catch (err) {
-        next(err);
-      }
+      const product = await getProductById(id);
+      res.json(product);
+    } catch (err) {
+      next(err);
     }
   },
-  post: async (req, res, next) => {
-    const { name, isAvailable, price, description} = req.body;
+  createProduct: async (req, res, next) => {
     try {
+      const { name, isAvailable, price, description } = req.body;
       const newProduct = await addNewProduct(name, price, isAvailable, description);
       res.status(200).json(newProduct);
     } catch (err) {
@@ -46,22 +42,21 @@ module.exports = {
       }
     }
   },
-  put: async (req, res, next) => {
+  editProduct: async (req, res, next) => {
     try {
-      const { body } = req;
-      const { id } = req.params;
+      const {body, params: {id}} = req;
       const editedProduct = await editProduct(id, body);
       res.json({ editedProduct });
     } catch (err) {
       next(err);
     }
   },
-  delete: async (req, res, next) => {
+  deleteProduct: async (req, res, next) => {
     try {
       const { id } = req.params;
       const deletedProduct = await deleteProduct({ _id: id });
       console.log('deletedProduct', deletedProduct)
-      res.send({ deletedProduct });
+      res.status(204);
     } catch (err) {
       next(err);
     }
